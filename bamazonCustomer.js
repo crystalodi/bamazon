@@ -35,12 +35,8 @@ function shopPrompt() {
       type: "input",
       message: "Enter an id for a product you want to buy",
       name: "item_id",
-      filter: function(input) {
-        return parseInt(input);
-      },
       validate: function(input) {
-        console.log(input);
-        if(isNaN(input)) {
+        if(isNaN(input) || input.trim() === "" || parseInt(input) <=0) {
           return false;
         }
         return true;
@@ -50,23 +46,46 @@ function shopPrompt() {
       type: "input",
       message: "How many units do you want to buy?",
       name: "quantityToBuy",
-      filter: function(input) {
-        return parseInt(input);
-      },
       validate: function(input) {
-        console.log(input)
-        if(isNaN(input)) {
+        if(isNaN(input) || input.trim() === "" || parseInt(input) <=0 ) {
           return false;
         }
         return true;
       }
     }
   ]).then(function(answers){
-    fufillOrder(answers.item_id, answers.quantityToBuy);
+    fufillOrder(parseInt(answers.item_id), parseInt(answers.quantityToBuy));
   })
 }
 
 function fufillOrder(item_id, quantityToBuy) {
-  console.log(arguments);
-  connection.end();
+  var whereObj = {item_id: item_id};
+  var query = connection.query("select stock_quantity, price from products where ?", {
+    item_id: item_id
+  }, function(err, res){
+    if (err) throw err;
+    if(res.length === 0) {
+      console.log("No product with that id was found. Please try again");
+      shopPrompt();
+    }
+    else {
+      var currentStockQuantity = res[0].stock_quantity;
+      var newStockQuantity =  currentStockQuantity - quantityToBuy;
+      var totalPrice = res[0].price * quantityToBuy;
+      if(quantityToBuy > res[0].stock_quantity) {
+        console.log("Insufficient stock quantity.")
+        connection.end();
+      } else {
+        var fieldsObj = {stock_quantity: newStockQuantity};
+        var arrUpdate = [];
+        arrUpdate.push(fieldsObj);
+        arrUpdate.push(whereObj);
+        var updateQuery = connection.query("update products set ? where ?", arrUpdate, function(err, res){
+          if(err) throw err;
+          console.log("Purchase successful. Your total bill is " + totalPrice);
+          connection.end();
+        });
+      }
+    }
+  });
 }
