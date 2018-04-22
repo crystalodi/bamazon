@@ -50,15 +50,19 @@ function viewProductsForSale(view) {
   var query = connection.query(queryToRun, function(err, res){
     if(err) throw err;
     console.log(consoleMessage)
-    for(var i = 0; i < res.length; i++) {
-      console.log("Product ID: " + res[i].item_id);
-      console.log("Product Name: " + res[i].product_name);
-      console.log("Department Name: " + res[i].department_name);
-      console.log("Price (in USD): " + res[i].price);
-      console.log("Number in Stock: " + res[i].stock_quantity);
-      console.log("-------------------------------");
+    if(res.length === 0) {
+      console.log("No products found.");
+    } else {
+      for(var i = 0; i < res.length; i++) {
+        console.log("Product ID: " + res[i].item_id);
+        console.log("Product Name: " + res[i].product_name);
+        console.log("Department Name: " + res[i].department_name);
+        console.log("Price (in USD): " + res[i].price);
+        console.log("Number in Stock: " + res[i].stock_quantity);
+        console.log("-------------------------------");
+      }
     }
-    connection.end();
+    exitContinuePrompt();
   });
 }
 
@@ -109,7 +113,7 @@ function addToInventory() {
         var updateQuery = connection.query("update products set ? where ?", arrUpdate, function(err, res){
           if(err) throw err;
           console.log("You have successfully added inventory for the product " + productName);
-          connection.end();
+          exitContinuePrompt();
         });
       }
     });
@@ -173,7 +177,24 @@ function addNewProduct() {
     var query = connection.query("insert into products set ?", answers, function(err, res){
       if(err) throw err;
       console.log("Product Added");
-      connection.end();
+      exitContinuePrompt();
     });
   });
+}
+
+function exitContinuePrompt() {
+  inquirer.prompt([
+    {
+      type: "list",
+      message: "Do you want to exit or go back to the main menu?",
+      choices: ["Exit", "Main Menu"],
+      name: "action"
+    }
+  ]).then(function(answers){
+    if(answers.action === "Exit") {
+      connection.end();
+    } else {
+      showManagerPrompt();
+    }
+  })
 }
