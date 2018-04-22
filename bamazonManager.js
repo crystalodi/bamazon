@@ -152,7 +152,7 @@ function addNewProduct() {
         if(isNaN(input) || input <=0) {
           return false;
         }
-        return false;
+        return true;
       }
     },
     {
@@ -166,7 +166,7 @@ function addNewProduct() {
         if(isNaN(input) || input <=0) {
           return false;
         }
-        return false;
+        return true;
       }
     }
   ]).then(function(answers){
