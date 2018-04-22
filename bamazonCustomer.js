@@ -36,7 +36,7 @@ function shopPrompt() {
       message: "Enter an id for a product you want to buy",
       name: "item_id",
       validate: function(input) {
-        if(isNaN(input) || input.trim() === "" || parseInt(input) <=0) {
+        if(isNaN(input) || input <=0) {
           return false;
         }
         return true;
@@ -47,7 +47,7 @@ function shopPrompt() {
       message: "How many units do you want to buy?",
       name: "quantityToBuy",
       validate: function(input) {
-        if(isNaN(input) || input.trim() === "" || parseInt(input) <=0 ) {
+        if(isNaN(input) || input <=0 ) {
           return false;
         }
         return true;
