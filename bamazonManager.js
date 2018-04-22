@@ -173,6 +173,7 @@ function addNewProduct() {
     var query = connection.query("insert into products set ?", answers, function(err, res){
       if(err) throw err;
       console.log("Product Added");
+      connection.end();
     });
   });
 }
