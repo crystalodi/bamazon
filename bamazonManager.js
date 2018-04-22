@@ -149,8 +149,7 @@ function addNewProduct() {
       name: "price",
       message: "Enter a price",
       filter: function(input) {
-        var numberInput = parseFloat(input);
-        return Math.round(numberInput * 100)/100;
+        return parseFloat(input);
       },
       validate: function(input) {
         if(isNaN(input) || input <=0) {
