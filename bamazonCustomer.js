@@ -5,7 +5,7 @@ var connection = mysql.createConnection({
   port: 3306,
   user: "root",
   database: "bamazon",
-  password: ""
+  password: "WowNoU89!"
 });
 
 connection.connect(function(err){
@@ -35,6 +35,9 @@ function shopPrompt() {
       type: "input",
       message: "Enter an id for a product you want to buy",
       name: "item_id",
+      filter: function(input) {
+        return parseInt(input);
+      },
       validate: function(input) {
         if(isNaN(input) || input <=0) {
           return false;
@@ -46,6 +49,9 @@ function shopPrompt() {
       type: "input",
       message: "How many units do you want to buy?",
       name: "quantityToBuy",
+      filter: function(input) {
+        return parseInt(input);
+      },
       validate: function(input) {
         if(isNaN(input) || input <=0 ) {
           return false;
@@ -54,7 +60,7 @@ function shopPrompt() {
       }
     }
   ]).then(function(answers){
-    fufillOrder(parseInt(answers.item_id), parseInt(answers.quantityToBuy));
+    fufillOrder(answers.item_id, answers.quantityToBuy);
   })
 }
 
