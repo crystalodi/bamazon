@@ -108,7 +108,7 @@ This will update the quantity in stock for a certain product using a series of i
 
 #### Add New Product
 This will add a new record to the `products` table using a series of inquirer prompts to ask for the name of the product, department of product, quantity in stock, and price of product.
-![Add to Inventory](bamazon_manager_add_new_product.gif "Add to Inventory")
+![Add to Inventory](bamazon_manager_add_new_product.gif "Add New Product")
 
 ## Built With
 
